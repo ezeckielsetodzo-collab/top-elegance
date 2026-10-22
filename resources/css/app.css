@@ -24,4 +24,5 @@
     html { scroll-behavior: smooth; }
     body { @apply bg-noir text-ivoire font-sans antialiased; }
     :focus-visible { outline: 2px solid var(--color-or); outline-offset: 3px; }
+    [x-cloak] { display: none !important; }
 }
