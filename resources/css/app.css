@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Outfit:wght@300;400;500&display=swap');
 @import 'tailwindcss';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
@@ -6,6 +7,21 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-serif: 'Playfair Display', Georgia, serif;
+    --font-sans: 'Outfit', ui-sans-serif, system-ui, sans-serif;
+
+    --color-noir: #0d0d0c;
+    --color-noir-doux: #161614;
+    --color-ligne: #2b2a26;
+    --color-ivoire: #f3eee3;
+    --color-sourdine: #a49d8e;
+    --color-or: #d4a84b;
+    --color-gris: #8a8a88;
+    --color-beige: #d9c4a0;
+    --color-vert: #0f4a2c;
+}
+@layer base {
+    html { scroll-behavior: smooth; }
+    body { @apply bg-noir text-ivoire font-sans antialiased; }
+    :focus-visible { outline: 2px solid var(--color-or); outline-offset: 3px; }
 }
