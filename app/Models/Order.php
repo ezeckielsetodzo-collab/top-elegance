@@ -8,6 +8,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Order extends Model
 {
+    public const STATUSES = [
+        'nouvelle' => 'Nouvelle',
+        'confirmee' => 'Confirmée',
+        'payee' => 'Payée',
+        'livree' => 'Livrée',
+        'annulee' => 'Annulée',
+    ];
+
     protected $fillable = ['customer_id', 'status', 'total', 'terms_accepted_at', 'notes'];
 
     protected $casts = [
