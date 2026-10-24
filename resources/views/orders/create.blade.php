@@ -94,8 +94,7 @@
 
             <label class="flex gap-3">
                 <input type="checkbox" name="cgv" value="1" @checked(old('cgv')) class="mt-1 size-4 accent-[#d4a84b]">
-                <span>J’ai lu et j’accepte les <a href="#" class="text-or underline">conditions de vente</a>.</span>
-            </label>
+                <span>J’ai lu et j’accepte les <a href="{{ route('terms') }}" class="text-or underline">conditions de vente</a>
             @error('cgv') <p class="text-[#e5877e]">{{ $message }}</p> @enderror
         </div>
 

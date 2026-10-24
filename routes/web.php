@@ -66,3 +66,5 @@ Route::get('/precommande/confirmation', function () {
 
     return view('orders.confirmation', ['commande' => $commande]);
 })->name('orders.confirmation');
+Route::view('/la-marque', 'pages.brand')->name('brand');
+Route::view('/conditions-de-vente', 'pages.terms')->name('terms');
