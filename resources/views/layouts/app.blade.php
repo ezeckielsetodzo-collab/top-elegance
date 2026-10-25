@@ -6,6 +6,18 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="description" content="@yield('description', 'TOP ÉLÉGANCE : streetwear élégant, né à Lomé, Togo.')">
     <title>@yield('title', 'TOP ÉLÉGANCE')</title>
+    <link rel="canonical" href="{{ url()->current() }}">
+<meta name="theme-color" content="#0d0d0c">
+<meta property="og:site_name" content="TOP ÉLÉGANCE">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="@yield('title', 'TOP ÉLÉGANCE')">
+<meta property="og:description" content="@yield('description', 'TOP ÉLÉGANCE : streetwear élégant, né à Lomé, Togo.')">
+<meta property="og:url" content="{{ url()->current() }}">
+@if (file_exists(public_path('images/partage.png')))
+    <meta property="og:image" content="{{ asset('images/partage.png') }}">
+    <meta name="twitter:card" content="summary_large_image">
+@endif
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="flex min-h-screen flex-col">

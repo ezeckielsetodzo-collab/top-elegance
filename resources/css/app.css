@@ -26,3 +26,6 @@
     :focus-visible { outline: 2px solid var(--color-or); outline-offset: 3px; }
     [x-cloak] { display: none !important; }
 }
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+}
