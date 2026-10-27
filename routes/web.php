@@ -2,9 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', fn () => view('home'))->name('home');
 Route::get('/collection', [\App\Http\Controllers\ProductController::class, 'index'])->name('products.index');
 Route::get('/modeles/{product}', [\App\Http\Controllers\ProductController::class, 'show'])->name('products.show');
 Route::get('/precommande', [\App\Http\Controllers\OrderController::class, 'create'])->name('orders.create');
