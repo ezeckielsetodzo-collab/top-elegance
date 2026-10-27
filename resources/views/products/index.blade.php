@@ -5,19 +5,7 @@
 
 @section('content')
 @php
-    // Données d'exemple : le Dev 2 enverra les vrais produits via $products.
-    $products = $products ?? [
-        ['name' => 'TE Signature', 'tagline' => 'Sobre, élégant, intemporel', 'color' => '#161616', 'colors' => ['Noir', 'Blanc', 'Gris'], 'preorder_open' => true, 'is_limited' => false],
-        ['name' => 'Lomé Edition', 'tagline' => 'Racines, fierté, Togo', 'color' => '#f4f1ea', 'colors' => ['Blanc', 'Noir', 'Beige'], 'preorder_open' => false, 'is_limited' => false],
-        ['name' => 'Black Luxury', 'tagline' => 'Élégance, minimaliste, premium', 'color' => '#101010', 'colors' => ['Noir', 'Blanc', 'Doré'], 'preorder_open' => true, 'is_limited' => false],
-        ['name' => 'Oversize Royal', 'tagline' => 'Confort, modernité, caractère', 'color' => '#d9c4a0', 'colors' => ['Beige', 'Noir'], 'preorder_open' => false, 'is_limited' => false],
-        ['name' => 'African Elegance', 'tagline' => 'Culture, identité, modernité', 'color' => '#141414', 'colors' => ['Noir', 'Blanc', 'Vert'], 'preorder_open' => false, 'is_limited' => false],
-        ['name' => 'TE 01', 'tagline' => 'Ambition, progression, évolution', 'color' => '#8a8a88', 'colors' => ['Gris', 'Noir', 'Blanc'], 'preorder_open' => false, 'is_limited' => true],
-        ['name' => 'No Rules', 'tagline' => 'Liberté, style, élégance', 'color' => '#f4f1ea', 'colors' => ['Blanc', 'Noir', 'Gris'], 'preorder_open' => false, 'is_limited' => false],
-        ['name' => 'Minimal TE', 'tagline' => 'Simple, classique, efficace', 'color' => '#101010', 'colors' => ['Noir', 'Blanc', 'Gris'], 'preorder_open' => false, 'is_limited' => false],
-        ['name' => '228 Edition', 'tagline' => 'Togo, unité, fierté', 'color' => '#0f4a2c', 'colors' => ['Vert', 'Blanc', 'Noir'], 'preorder_open' => true, 'is_limited' => false],
-        ['name' => 'Founder Edition', 'tagline' => 'Exclusivité, prestige, vision', 'color' => '#0e0e0e', 'colors' => ['Noir', 'Doré', 'Blanc'], 'preorder_open' => false, 'is_limited' => true],
-    ];
+    $products = $products ?? \App\Support\ExempleProduits::tous();
     $filters = ['Tous', 'Noir', 'Blanc', 'Gris', 'Beige', 'Vert', 'Doré'];
 @endphp
 
