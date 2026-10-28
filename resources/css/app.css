@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Outfit:wght@300;400;500&display=swap');
+
 @import 'tailwindcss';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
@@ -22,6 +22,10 @@
 }
 @layer base {
     html { scroll-behavior: smooth; }
-    body { @apply bg-noir text-ivoire font-sans antialiased; }
+   body { @apply bg-noir text-ivoire font-sans antialiased lining-nums; }
     :focus-visible { outline: 2px solid var(--color-or); outline-offset: 3px; }
+    [x-cloak] { display: none !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
 }
