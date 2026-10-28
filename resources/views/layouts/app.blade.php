@@ -24,10 +24,9 @@
 
             <nav class="hidden gap-8 text-[15px] text-sourdine sm:flex" aria-label="Navigation principale">
                 {{-- Remplacer les # par les vraies routes quand elles existeront --}}
-                <a href="#" class="hover:text-or">Collection</a>
-                <a href="#" class="hover:text-or">La marque</a>
-                <a href="#" class="hover:text-or">Commander</a>
-            </nav>
+               <a href="{{ route('products.index') }}" class="hover:text-or">Collection</a>
+<a href="{{ route('brand') }}" class="hover:text-or">La marque</a>
+<a href="{{ route('orders.create') }}" class="hover:text-or">Commander</a>
 
             <button type="button" class="rounded border border-ligne px-3 py-1.5 text-sm sm:hidden"
                     @click="open = !open" :aria-expanded="open" aria-controls="menu-mobile">
@@ -38,9 +37,9 @@
         <nav id="menu-mobile" x-cloak x-show="open" x-transition
              class="flex flex-col gap-4 border-t border-ligne px-5 py-4 text-sourdine sm:hidden"
              aria-label="Menu mobile">
-            <a href="#" class="hover:text-or" @click="open = false">Collection</a>
-            <a href="#" class="hover:text-or" @click="open = false">La marque</a>
-            <a href="#" class="hover:text-or" @click="open = false">Commander</a>
+            <a href="{{ route('products.index') }}" class="hover:text-or" @click="open = false">Collection</a>
+<a href="{{ route('brand') }}" class="hover:text-or" @click="open = false">La marque</a>
+<a href="{{ route('orders.create') }}" class="hover:text-or" @click="open = false">Commander</a>
         </nav>
     </header>
 
@@ -63,7 +62,7 @@
             </div>
         </div>
         <div class="border-t border-ligne py-4 text-center text-sm text-sourdine">
-            Lomé, Togo · EST. 2026
+            Lomé, Togo · EST. 2026 · <a href="{{ route('terms') }}" class="underline hover:text-or">Conditions de vente</a>
         </div>
     </footer>
 

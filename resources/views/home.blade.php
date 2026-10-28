@@ -48,8 +48,8 @@
     </div>
 
     <div class="mt-8 flex flex-wrap justify-center gap-3">
-        <x-button href="#">Voir la collection</x-button>
-        <x-button href="#" variant="secondary">Précommander</x-button>
+        <x-button href="{{ route('products.index') }}">Voir la collection</x-button>
+        <x-button href="{{ route('orders.create') }}" variant="secondary">Précommander</x-button>
     </div>
 </section>
 

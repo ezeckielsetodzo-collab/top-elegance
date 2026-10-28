@@ -8,6 +8,8 @@ Route::get('/modeles/{product}', [\App\Http\Controllers\ProductController::class
 Route::get('/precommande', [\App\Http\Controllers\OrderController::class, 'create'])->name('orders.create');
 Route::post('/precommande', [\App\Http\Controllers\OrderController::class, 'store'])->middleware('throttle:10,1')->name('orders.store');
 Route::get('/precommande/confirmation', [\App\Http\Controllers\OrderController::class, 'confirmation'])->name('orders.confirmation');
+Route::view('/la-marque', 'pages.brand')->name('brand');
+Route::view('/conditions-de-vente', 'pages.terms')->name('terms');
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/connexion', [\App\Http\Controllers\Admin\AdminAuthController::class, 'create'])->name('login');
     Route::post('/connexion', [\App\Http\Controllers\Admin\AdminAuthController::class, 'store'])->middleware('throttle:5,1')->name('login.store');
