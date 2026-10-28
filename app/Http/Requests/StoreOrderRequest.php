@@ -16,33 +16,39 @@ class StoreOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:100'],
-            'phone' => ['required', 'string', 'regex:/^\+?[0-9 ]{8,15}$/'],
-            'email' => ['nullable', 'email', 'max:150'],
-            'city' => ['nullable', 'string', 'max:100'],
-            'product_id' => ['required', 'integer', 'exists:products,id'],
-            'color_id' => ['required', 'integer', 'exists:colors,id'],
-            'size_id' => ['required', 'integer', 'exists:sizes,id'],
-            'quantity' => ['required', 'integer', 'min:1', 'max:10'],
-            'consent' => ['sometimes', 'accepted'],
-            'terms' => ['accepted'],
+            'nom' => ['required', 'string', 'max:100'],
+            'telephone' => ['required', 'regex:/^[0-9 +().-]{8,20}$/'],
+            'quartier' => ['required', 'string', 'max:150'],
+            'modele' => ['required', 'string', 'exists:products,slug'],
+            'couleur' => ['required', 'string', 'max:30'],
+            'taille' => ['required', 'string', 'max:10'],
+            'quantite' => ['required', 'integer', 'min:1', 'max:10'],
+            'consentement' => ['accepted'],
+            'cgv' => ['accepted'],
+            // Piège à robots : ce champ invisible doit rester vide.
+            'site_web' => ['nullable', 'max:0'],
         ];
     }
 
     public function messages(): array
     {
         return [
-            'name.required' => 'Indiquez votre nom.',
-            'phone.required' => 'Indiquez votre numéro de téléphone.',
-            'phone.regex' => 'Le numéro de téléphone est invalide.',
-            'email.email' => 'L’adresse email est invalide.',
-            'product_id.required' => 'Choisissez un modèle.',
-            'color_id.required' => 'Choisissez une couleur.',
-            'size_id.required' => 'Choisissez une taille.',
-            'quantity.min' => 'La quantité minimale est 1.',
-            'quantity.max' => 'La quantité maximale est 10.',
-            'terms.accepted' => 'Vous devez accepter les conditions de vente.',
+            'required' => 'Ce champ est obligatoire.',
+            'regex' => 'Entrez un numéro de téléphone valide.',
+            'exists' => 'Ce choix n’est pas disponible.',
+            'accepted' => 'Vous devez cocher cette case pour continuer.',
+            'integer' => 'Entrez un nombre entier.',
+            'min' => 'La valeur est trop petite.',
+            'max' => 'La valeur est trop grande.',
         ];
+    }
+
+    /**
+     * Le modèle choisi, retrouvé par son slug (valide après la validation).
+     */
+    public function product(): Product
+    {
+        return Product::where('slug', $this->input('modele'))->firstOrFail();
     }
 
     public function after(): array
@@ -53,18 +59,18 @@ class StoreOrderRequest extends FormRequest
                     return;
                 }
 
-                $product = Product::find($this->integer('product_id'));
+                $product = $this->product();
 
                 if (! $product->preorder_open) {
-                    $validator->errors()->add('product_id', 'Ce modèle n’est pas encore ouvert à la précommande.');
+                    $validator->errors()->add('modele', 'Ce modèle n’est pas encore ouvert à la précommande.');
                 }
 
-                if (! $product->colors()->whereKey($this->integer('color_id'))->exists()) {
-                    $validator->errors()->add('color_id', 'Cette couleur n’existe pas pour ce modèle.');
+                if (! $product->colors()->where('name', $this->input('couleur'))->exists()) {
+                    $validator->errors()->add('couleur', 'Cette couleur n’existe pas pour ce modèle.');
                 }
 
-                if (! $product->sizes()->whereKey($this->integer('size_id'))->exists()) {
-                    $validator->errors()->add('size_id', 'Cette taille n’existe pas pour ce modèle.');
+                if (! $product->sizes()->where('name', $this->input('taille'))->exists()) {
+                    $validator->errors()->add('taille', 'Cette taille n’existe pas pour ce modèle.');
                 }
             },
         ];
