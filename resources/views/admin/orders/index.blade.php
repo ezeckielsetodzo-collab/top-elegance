@@ -52,8 +52,8 @@
                         <td class="px-4 py-3">
                             <p>{{ $order->customer->name }}</p>
                             <p class="text-sourdine">{{ $order->customer->phone }}</p>
-                            @if ($order->customer->city)
-                                <p class="text-sourdine">{{ $order->customer->city }}</p>
+                            @if ($order->delivery_address)
+                                <p class="text-sourdine">{{ $order->delivery_address }}</p>
                             @endif
                         </td>
                         <td class="px-4 py-3">

@@ -16,7 +16,7 @@ class Order extends Model
         'annulee' => 'Annulée',
     ];
 
-    protected $fillable = ['customer_id', 'status', 'total', 'terms_accepted_at', 'notes'];
+    protected $fillable = ['customer_id', 'status', 'delivery_address', 'total', 'terms_accepted_at', 'notes'];
 
     protected $casts = [
         'terms_accepted_at' => 'datetime',
