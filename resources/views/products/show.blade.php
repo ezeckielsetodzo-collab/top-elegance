@@ -74,8 +74,7 @@
 
             <div class="mt-6">
                 @if ($product['preorder_open'])
-                    {{-- Le lien sera branché sur le formulaire de précommande à l'étape 7 --}}
-                    <x-button href="#">Précommander</x-button>
+                  <x-button x-on:click="window.location.href = '{{ route('orders.create') }}?modele={{ $product['slug'] }}&couleur=' + encodeURIComponent(couleur)">Précommander</x-button>
                 @else
                     <x-button disabled>Bientôt disponible</x-button>
                 @endif
