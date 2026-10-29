@@ -37,6 +37,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/finances', [\App\Http\Controllers\Admin\AdminFinanceController::class, 'store'])->name('finances.store');
         Route::delete('/finances/{entry}', [\App\Http\Controllers\Admin\AdminFinanceController::class, 'destroy'])->name('finances.destroy');
         Route::get('/indicateurs', [\App\Http\Controllers\Admin\AdminIndicatorController::class, 'index'])->name('indicators.index');
+        Route::get('/commandes/{order}/bon', [\App\Http\Controllers\Admin\AdminDocumentController::class, 'order'])->name('documents.order');
+        Route::get('/commandes/{order}/livraison', [\App\Http\Controllers\Admin\AdminDocumentController::class, 'delivery'])->name('documents.delivery');
+        Route::get('/ambassadeurs/{ambassador}/fiche', [\App\Http\Controllers\Admin\AdminDocumentController::class, 'ambassador'])->name('documents.ambassador');
         Route::patch('/commandes/{order}', [AdminOrderController::class, 'update'])->name('orders.update');
     });
 });

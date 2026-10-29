@@ -54,7 +54,10 @@
             <tbody>
                 @forelse ($orders as $order)
                     <tr class="border-t border-ligne align-top">
-                        <td class="px-4 py-3">{{ $order->id }}</td>
+                        <td class="px-4 py-3">
+                            <p>{{ $order->id }}</p>
+                            <p class="mt-1 text-xs"><a href="{{ route('admin.documents.order', $order) }}" target="_blank" class="text-sourdine underline hover:text-ivoire">Bon</a> · <a href="{{ route('admin.documents.delivery', $order) }}" target="_blank" class="text-sourdine underline hover:text-ivoire">Livraison</a></p>
+                        </td>
                         <td class="px-4 py-3 whitespace-nowrap">{{ $order->created_at->format('d/m/Y H:i') }}</td>
                         <td class="px-4 py-3">
                             <p>{{ $order->customer->name }}</p>

@@ -76,6 +76,7 @@
                                 @method('PATCH')
                                 <button type="submit" class="rounded bg-or px-3 py-1.5 text-sm font-medium text-noir hover:opacity-90">Enregistrer</button>
                             </form>
+                            <a href="{{ route('admin.documents.ambassador', ['ambassador' => $a, 'mois' => $mois]) }}" target="_blank" class="mt-2 inline-block text-xs text-sourdine underline hover:text-ivoire">Fiche {{ $titreMois }}</a>
                         </td>
                     </tr>
                 @empty
