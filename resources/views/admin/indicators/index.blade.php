@@ -27,6 +27,11 @@
 
     <p class="mt-2 text-sm text-sourdine">Les commandes annulées ne sont pas comptées.</p>
 
+    <div class="mt-3 flex flex-wrap gap-2">
+        <a href="{{ route('admin.exports.indicators', ['mois' => $mois]) }}" class="rounded border border-ligne px-3 py-1.5 text-sm text-sourdine hover:text-ivoire">Exporter les indicateurs (CSV)</a>
+        <a href="{{ route('admin.exports.orders', ['mois' => $mois]) }}" class="rounded border border-ligne px-3 py-1.5 text-sm text-sourdine hover:text-ivoire">Exporter les commandes du mois (CSV)</a>
+    </div>
+
     <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div class="rounded border border-ligne p-4"><p class="text-sm text-sourdine">Chiffre d'affaires</p><p class="mt-1 text-xl font-medium text-or">{{ $fcfa($i['ca']) }}</p></div>
         <div class="rounded border border-ligne p-4">
