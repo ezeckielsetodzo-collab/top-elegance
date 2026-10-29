@@ -33,6 +33,11 @@ class Product extends Model
         return $this->belongsToMany(Size::class);
     }
 
+    public function stocks(): HasMany
+    {
+        return $this->hasMany(Stock::class);
+    }
+
     public function orderItems(): HasMany
     {
         return $this->hasMany(OrderItem::class);
