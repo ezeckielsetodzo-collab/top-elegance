@@ -34,8 +34,11 @@ class OrderController extends Controller
         $size = $product->sizes()->where('name', $data['taille'])->firstOrFail();
         $quantity = (int) $data['quantite'];
         $phone = preg_replace('/[^0-9+]/', '', $data['telephone']);
+        $ambassador = $request->ambassador();
+        $subtotal = (int) $product->price * $quantity;
+        $discount = $ambassador ? (int) round($subtotal * $ambassador->discount_percent / 100) : 0;
 
-        $order = DB::transaction(function () use ($data, $product, $color, $size, $quantity, $phone) {
+        $order = DB::transaction(function () use ($data, $product, $color, $size, $quantity, $phone, $ambassador, $subtotal, $discount) {
             $customer = Customer::firstOrNew(['phone' => $phone]);
             $customer->name = $data['nom'];
 
@@ -48,9 +51,11 @@ class OrderController extends Controller
 
             $order = Order::create([
                 'customer_id' => $customer->id,
+                'ambassador_id' => $ambassador?->id,
                 'status' => 'nouvelle',
                 'delivery_address' => $data['quartier'],
-                'total' => $product->price * $quantity,
+                'total' => $subtotal - $discount,
+                'discount' => $discount,
                 'terms_accepted_at' => now(),
             ]);
 

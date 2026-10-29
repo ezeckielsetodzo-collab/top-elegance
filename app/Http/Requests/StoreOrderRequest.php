@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Ambassador;
 use App\Models\Product;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
@@ -25,6 +26,7 @@ class StoreOrderRequest extends FormRequest
             'quantite' => ['required', 'integer', 'min:1', 'max:10'],
             'consentement' => ['accepted'],
             'cgv' => ['accepted'],
+            'code' => ['nullable', 'string', 'max:30'],
             // Piège à robots : ce champ invisible doit rester vide.
             'site_web' => ['nullable', 'max:0'],
         ];
@@ -51,12 +53,30 @@ class StoreOrderRequest extends FormRequest
         return Product::where('slug', $this->input('modele'))->firstOrFail();
     }
 
+    /**
+     * L'ambassadeur correspondant au code promo saisi, s'il existe et est actif.
+     */
+    public function ambassador(): ?Ambassador
+    {
+        $code = Ambassador::normalizeCode($this->input('code'));
+
+        if ($code === '') {
+            return null;
+        }
+
+        return Ambassador::where('code', $code)->where('active', true)->first();
+    }
+
     public function after(): array
     {
         return [
             function (Validator $validator) {
                 if ($validator->errors()->isNotEmpty()) {
                     return;
+                }
+
+                if (Ambassador::normalizeCode($this->input('code')) !== '' && ! $this->ambassador()) {
+                    $validator->errors()->add('code', 'Ce code promo n’existe pas ou n’est plus valide.');
                 }
 
                 $product = $this->product();

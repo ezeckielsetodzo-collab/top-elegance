@@ -30,6 +30,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/stock', [\App\Http\Controllers\Admin\AdminStockController::class, 'index'])->name('stock.index');
         Route::get('/stock/{product}', [\App\Http\Controllers\Admin\AdminStockController::class, 'edit'])->name('stock.edit');
         Route::put('/stock/{product}', [\App\Http\Controllers\Admin\AdminStockController::class, 'update'])->name('stock.update');
+        Route::get('/ambassadeurs', [\App\Http\Controllers\Admin\AdminAmbassadorController::class, 'index'])->name('ambassadors.index');
+        Route::post('/ambassadeurs', [\App\Http\Controllers\Admin\AdminAmbassadorController::class, 'store'])->name('ambassadors.store');
+        Route::patch('/ambassadeurs/{ambassador}', [\App\Http\Controllers\Admin\AdminAmbassadorController::class, 'update'])->name('ambassadors.update');
         Route::patch('/commandes/{order}', [AdminOrderController::class, 'update'])->name('orders.update');
     });
 });
