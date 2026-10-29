@@ -14,6 +14,7 @@
             <a href="{{ route('admin.finances.index') }}" class="rounded border border-ligne px-3 py-1.5 text-sm text-sourdine hover:text-ivoire">Finances</a>
             <a href="{{ route('admin.indicators.index') }}" class="rounded border border-ligne px-3 py-1.5 text-sm text-sourdine hover:text-ivoire">Indicateurs</a>
             <a href="{{ route('admin.polls.index') }}" class="rounded border border-ligne px-3 py-1.5 text-sm text-sourdine hover:text-ivoire">Sondage</a>
+            <a href="{{ route('admin.customers.index') }}" class="rounded border border-ligne px-3 py-1.5 text-sm text-sourdine hover:text-ivoire">Clients</a>
             <form method="POST" action="{{ route('admin.logout') }}">
                 @csrf
                 <button type="submit" class="rounded border border-ligne px-3 py-1.5 text-sm text-sourdine hover:text-ivoire">

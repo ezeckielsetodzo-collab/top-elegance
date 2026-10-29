@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Ambassador;
+use App\Models\Customer;
 use App\Models\Product;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
@@ -27,6 +28,7 @@ class StoreOrderRequest extends FormRequest
             'consentement' => ['accepted'],
             'cgv' => ['accepted'],
             'code' => ['nullable', 'string', 'max:30'],
+            'parrain' => ['nullable', 'string', 'max:12'],
             // Piège à robots : ce champ invisible doit rester vide.
             'site_web' => ['nullable', 'max:0'],
         ];
@@ -67,6 +69,20 @@ class StoreOrderRequest extends FormRequest
         return Ambassador::where('code', $code)->where('active', true)->first();
     }
 
+    /**
+     * Le client parrain correspondant au code de parrainage saisi, s'il existe.
+     */
+    public function sponsor(): ?Customer
+    {
+        $code = Ambassador::normalizeCode($this->input('parrain'));
+
+        if ($code === '') {
+            return null;
+        }
+
+        return Customer::where('referral_code', $code)->first();
+    }
+
     public function after(): array
     {
         return [
@@ -77,6 +93,17 @@ class StoreOrderRequest extends FormRequest
 
                 if (Ambassador::normalizeCode($this->input('code')) !== '' && ! $this->ambassador()) {
                     $validator->errors()->add('code', 'Ce code promo n’existe pas ou n’est plus valide.');
+                }
+
+                if (Ambassador::normalizeCode($this->input('parrain')) !== '') {
+                    $sponsor = $this->sponsor();
+                    $phone = preg_replace('/[^0-9+]/', '', (string) $this->input('telephone'));
+
+                    if (! $sponsor) {
+                        $validator->errors()->add('parrain', 'Ce code de parrainage n’existe pas.');
+                    } elseif ($sponsor->phone === $phone) {
+                        $validator->errors()->add('parrain', 'Vous ne pouvez pas utiliser votre propre code.');
+                    }
                 }
 
                 $product = $this->product();

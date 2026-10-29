@@ -35,16 +35,26 @@ class OrderController extends Controller
         $quantity = (int) $data['quantite'];
         $phone = preg_replace('/[^0-9+]/', '', $data['telephone']);
         $ambassador = $request->ambassador();
+        $sponsor = $request->sponsor();
         $subtotal = (int) $product->price * $quantity;
         $discount = $ambassador ? (int) round($subtotal * $ambassador->discount_percent / 100) : 0;
 
-        $order = DB::transaction(function () use ($data, $product, $color, $size, $quantity, $phone, $ambassador, $subtotal, $discount) {
+        $order = DB::transaction(function () use ($data, $product, $color, $size, $quantity, $phone, $ambassador, $sponsor, $subtotal, $discount) {
             $customer = Customer::firstOrNew(['phone' => $phone]);
             $customer->name = $data['nom'];
 
             if (! $customer->consent) {
                 $customer->consent = true;
                 $customer->consented_at = now();
+            }
+
+            // Parrainage : seulement pour un nouveau client (jamais déjà parrainé ni déjà client).
+            if ($sponsor && ! $customer->exists) {
+                $customer->referred_by = $sponsor->id;
+            }
+
+            if (! $customer->referral_code) {
+                $customer->referral_code = Customer::newReferralCode();
             }
 
             $customer->save();
@@ -97,6 +107,7 @@ class OrderController extends Controller
             'couleur' => $item->color->name,
             'taille' => $item->size->name,
             'quantite' => $item->quantity,
+            'code_parrainage' => $order->customer->referral_code,
         ];
 
         return view('orders.confirmation', ['commande' => $commande]);
