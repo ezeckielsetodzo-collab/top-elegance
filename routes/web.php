@@ -25,6 +25,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware(EnsureUserIsAdmin::class)->group(function () {
         Route::post('/deconnexion', [AdminAuthController::class, 'destroy'])->name('logout');
         Route::get('/commandes', [AdminOrderController::class, 'index'])->name('orders.index');
+        Route::get('/produits', [\App\Http\Controllers\Admin\AdminProductController::class, 'index'])->name('products.index');
+        Route::patch('/produits/{product}', [\App\Http\Controllers\Admin\AdminProductController::class, 'update'])->name('products.update');
         Route::patch('/commandes/{order}', [AdminOrderController::class, 'update'])->name('orders.update');
     });
 });

@@ -173,4 +173,53 @@ class AdminTest extends TestCase
         $this->post(route('admin.login.store'), ['email' => 'admin@topelegance.test', 'password' => 'secret-123'])
             ->assertRedirect(route('admin.orders.index'));
     }
+
+    public function test_ladministrateur_voit_les_produits(): void
+    {
+        $this->seed(ProductSeeder::class);
+
+        $this->actingAs($this->admin())
+            ->get(route('admin.products.index'))
+            ->assertOk()
+            ->assertSee('Produits');
+    }
+
+    public function test_ladministrateur_peut_modifier_prix_et_ouverture(): void
+    {
+        $this->seed(ProductSeeder::class);
+        $product = Product::where('preorder_open', false)->first();
+
+        $this->actingAs($this->admin())
+            ->patch(route('admin.products.update', $product), [
+                'price' => 15000,
+                'cost' => 6000,
+                'preorder_open' => '1',
+            ])
+            ->assertSessionHasNoErrors();
+
+        $product->refresh();
+        $this->assertSame(15000, (int) $product->price);
+        $this->assertSame(6000, (int) $product->cost);
+        $this->assertTrue($product->preorder_open);
+    }
+
+    public function test_un_prix_invalide_est_refuse(): void
+    {
+        $this->seed(ProductSeeder::class);
+        $product = Product::first();
+
+        $this->actingAs($this->admin())
+            ->patch(route('admin.products.update', $product), ['price' => 'abc'])
+            ->assertSessionHasErrors('price');
+    }
+
+    public function test_un_visiteur_ne_peut_pas_modifier_un_produit(): void
+    {
+        $this->seed(ProductSeeder::class);
+        $product = Product::first();
+
+        $this->patch(route('admin.products.update', $product), ['price' => 1])
+            ->assertRedirect(route('admin.login'));
+        $this->get(route('admin.products.index'))->assertRedirect(route('admin.login'));
+    }
 }
