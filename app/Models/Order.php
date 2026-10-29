@@ -16,7 +16,7 @@ class Order extends Model
         'annulee' => 'Annulée',
     ];
 
-    protected $fillable = ['customer_id', 'status', 'delivery_address', 'total', 'terms_accepted_at', 'notes'];
+    protected $fillable = ['customer_id', 'ambassador_id', 'status', 'delivery_address', 'total', 'discount', 'terms_accepted_at', 'notes'];
 
     protected $casts = [
         'terms_accepted_at' => 'datetime',
@@ -25,6 +25,11 @@ class Order extends Model
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);
+    }
+
+    public function ambassador(): BelongsTo
+    {
+        return $this->belongsTo(Ambassador::class);
     }
 
     public function items(): HasMany

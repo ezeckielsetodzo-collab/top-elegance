@@ -10,6 +10,7 @@
         <div class="flex gap-3">
             <a href="{{ route('admin.products.index') }}" class="rounded border border-ligne px-3 py-1.5 text-sm text-sourdine hover:text-ivoire">Produits</a>
             <a href="{{ route('admin.stock.index') }}" class="rounded border border-ligne px-3 py-1.5 text-sm text-sourdine hover:text-ivoire">Stock</a>
+            <a href="{{ route('admin.ambassadors.index') }}" class="rounded border border-ligne px-3 py-1.5 text-sm text-sourdine hover:text-ivoire">Ambassadeurs</a>
             <form method="POST" action="{{ route('admin.logout') }}">
                 @csrf
                 <button type="submit" class="rounded border border-ligne px-3 py-1.5 text-sm text-sourdine hover:text-ivoire">
@@ -66,7 +67,12 @@
                                 <p class="text-sourdine">{{ $item->color->name }} · taille {{ $item->size->name }}</p>
                             @endforeach
                         </td>
-                        <td class="px-4 py-3 whitespace-nowrap">{{ number_format($order->total, 0, ',', ' ') }} FCFA</td>
+                        <td class="px-4 py-3 whitespace-nowrap">
+                            {{ number_format($order->total, 0, ',', ' ') }} FCFA
+                            @if ($order->ambassador)
+                                <p class="text-sourdine">Code {{ $order->ambassador->code }}@if ($order->discount) · −{{ number_format($order->discount, 0, ',', ' ') }} @endif</p>
+                            @endif
+                        </td>
                         <td class="px-4 py-3">
                             <form method="POST" action="{{ route('admin.orders.update', $order) }}" class="flex items-center gap-2">
                                 @csrf
