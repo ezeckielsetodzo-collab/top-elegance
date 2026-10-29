@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PollController;
 use App\Http\Controllers\ProductController;
 use App\Http\Middleware\EnsureUserIsAdmin;
 use Illuminate\Support\Facades\Route;
@@ -16,6 +17,8 @@ Route::get('/modeles/{product}', [ProductController::class, 'show'])->name('prod
 
 Route::get('/precommander', [OrderController::class, 'create'])->name('orders.create');
 Route::post('/precommander', [OrderController::class, 'store'])->middleware('throttle:10,1')->name('orders.store');
+Route::get('/sondage/{product}', [PollController::class, 'results'])->name('poll.results');
+Route::post('/sondage', [PollController::class, 'vote'])->middleware('throttle:20,1')->name('poll.vote');
 Route::get('/precommande/confirmation', [OrderController::class, 'confirmation'])->name('orders.confirmation');
 
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -42,6 +45,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/ambassadeurs/{ambassador}/fiche', [\App\Http\Controllers\Admin\AdminDocumentController::class, 'ambassador'])->name('documents.ambassador');
         Route::get('/indicateurs/export', [\App\Http\Controllers\Admin\AdminExportController::class, 'indicators'])->name('exports.indicators');
         Route::get('/commandes/export', [\App\Http\Controllers\Admin\AdminExportController::class, 'orders'])->name('exports.orders');
+        Route::get('/sondage', [\App\Http\Controllers\Admin\AdminPollController::class, 'index'])->name('polls.index');
         Route::patch('/commandes/{order}', [AdminOrderController::class, 'update'])->name('orders.update');
     });
 });
