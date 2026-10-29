@@ -7,12 +7,15 @@
     <div class="flex flex-wrap items-center justify-between gap-4">
         <h1 class="font-serif text-3xl font-extrabold">Commandes</h1>
 
-        <form method="POST" action="{{ route('admin.logout') }}">
-            @csrf
-            <button type="submit" class="rounded border border-ligne px-3 py-1.5 text-sm text-sourdine hover:text-ivoire">
-                Se déconnecter
-            </button>
-        </form>
+        <div class="flex gap-3">
+            <a href="{{ route('admin.products.index') }}" class="rounded border border-ligne px-3 py-1.5 text-sm text-sourdine hover:text-ivoire">Produits</a>
+            <form method="POST" action="{{ route('admin.logout') }}">
+                @csrf
+                <button type="submit" class="rounded border border-ligne px-3 py-1.5 text-sm text-sourdine hover:text-ivoire">
+                    Se déconnecter
+                </button>
+            </form>
+        </div>
     </div>
 
     @if (session('success'))
