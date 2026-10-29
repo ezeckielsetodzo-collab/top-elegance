@@ -27,6 +27,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/commandes', [AdminOrderController::class, 'index'])->name('orders.index');
         Route::get('/produits', [\App\Http\Controllers\Admin\AdminProductController::class, 'index'])->name('products.index');
         Route::patch('/produits/{product}', [\App\Http\Controllers\Admin\AdminProductController::class, 'update'])->name('products.update');
+        Route::get('/stock', [\App\Http\Controllers\Admin\AdminStockController::class, 'index'])->name('stock.index');
+        Route::get('/stock/{product}', [\App\Http\Controllers\Admin\AdminStockController::class, 'edit'])->name('stock.edit');
+        Route::put('/stock/{product}', [\App\Http\Controllers\Admin\AdminStockController::class, 'update'])->name('stock.update');
         Route::patch('/commandes/{order}', [AdminOrderController::class, 'update'])->name('orders.update');
     });
 });

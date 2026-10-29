@@ -8,6 +8,9 @@ return [
     // Utilisée par le compte à rebours de l'accueil. Valeur provisoire si .env est vide.
     'drop_date' => env('SHOP_DROP_DATE') ?: '2026-12-01T18:00:00Z',
 
+    // Nombre de jours sans commande après lesquels un stock est dit « dormant ».
+    'dormant_days' => (int) env('SHOP_DORMANT_DAYS', 30),
+
     // Compte administrateur créé par : php artisan db:seed --class=AdminSeeder
     'admin_email' => env('ADMIN_EMAIL'),
     'admin_password' => env('ADMIN_PASSWORD'),
