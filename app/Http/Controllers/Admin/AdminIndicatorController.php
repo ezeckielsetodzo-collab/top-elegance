@@ -20,6 +20,7 @@ class AdminIndicatorController extends Controller
 
         return view('admin.indicators.index', [
             'i' => $indicateurs,
+            'mois' => $mois,
             'titreMois' => $debut->translatedFormat('F Y'),
             'moisPrecedent' => $debut->copy()->subMonth()->format('Y-m'),
             'moisSuivant' => $debut->copy()->addMonth()->format('Y-m'),

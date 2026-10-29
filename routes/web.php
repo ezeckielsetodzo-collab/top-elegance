@@ -40,6 +40,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/commandes/{order}/bon', [\App\Http\Controllers\Admin\AdminDocumentController::class, 'order'])->name('documents.order');
         Route::get('/commandes/{order}/livraison', [\App\Http\Controllers\Admin\AdminDocumentController::class, 'delivery'])->name('documents.delivery');
         Route::get('/ambassadeurs/{ambassador}/fiche', [\App\Http\Controllers\Admin\AdminDocumentController::class, 'ambassador'])->name('documents.ambassador');
+        Route::get('/indicateurs/export', [\App\Http\Controllers\Admin\AdminExportController::class, 'indicators'])->name('exports.indicators');
+        Route::get('/commandes/export', [\App\Http\Controllers\Admin\AdminExportController::class, 'orders'])->name('exports.orders');
         Route::patch('/commandes/{order}', [AdminOrderController::class, 'update'])->name('orders.update');
     });
 });
