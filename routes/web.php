@@ -33,6 +33,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/ambassadeurs', [\App\Http\Controllers\Admin\AdminAmbassadorController::class, 'index'])->name('ambassadors.index');
         Route::post('/ambassadeurs', [\App\Http\Controllers\Admin\AdminAmbassadorController::class, 'store'])->name('ambassadors.store');
         Route::patch('/ambassadeurs/{ambassador}', [\App\Http\Controllers\Admin\AdminAmbassadorController::class, 'update'])->name('ambassadors.update');
+        Route::get('/finances', [\App\Http\Controllers\Admin\AdminFinanceController::class, 'index'])->name('finances.index');
+        Route::post('/finances', [\App\Http\Controllers\Admin\AdminFinanceController::class, 'store'])->name('finances.store');
+        Route::delete('/finances/{entry}', [\App\Http\Controllers\Admin\AdminFinanceController::class, 'destroy'])->name('finances.destroy');
         Route::patch('/commandes/{order}', [AdminOrderController::class, 'update'])->name('orders.update');
     });
 });
