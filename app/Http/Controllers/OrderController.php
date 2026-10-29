@@ -13,39 +13,33 @@ class OrderController extends Controller
 {
     public function create(Request $request)
     {
-        $products = Product::with(['colors', 'sizes'])
+        $ouverts = Product::with('colors')
             ->where('preorder_open', true)
             ->orderBy('sort_order')
             ->get()
-            ->map(fn (Product $p) => [
-                'id' => $p->id,
-                'slug' => $p->slug,
-                'name' => $p->name,
-                'price' => $p->price,
-                'colors' => $p->colors->map(fn ($c) => ['id' => $c->id, 'name' => $c->name])->values()->all(),
-                'sizes' => $p->sizes->sortBy('sort_order')->map(fn ($s) => ['id' => $s->id, 'name' => $s->name])->values()->all(),
-            ])
+            ->map->toFrontend()
             ->all();
 
         return view('orders.create', [
-            'products' => $products,
-            'selected' => $request->query('modele'),
+            'ouverts' => $ouverts,
+            'choix' => $request->only(['modele', 'couleur']),
         ]);
     }
 
     public function store(StoreOrderRequest $request)
     {
         $data = $request->validated();
-        $product = Product::findOrFail($data['product_id']);
-        $quantity = (int) $data['quantity'];
+        $product = $request->product();
+        $color = $product->colors()->where('name', $data['couleur'])->firstOrFail();
+        $size = $product->sizes()->where('name', $data['taille'])->firstOrFail();
+        $quantity = (int) $data['quantite'];
+        $phone = preg_replace('/[^0-9+]/', '', $data['telephone']);
 
-        $order = DB::transaction(function () use ($data, $product, $quantity) {
-            $customer = Customer::firstOrNew(['phone' => $data['phone']]);
-            $customer->name = $data['name'];
-            $customer->email = $data['email'] ?? $customer->email;
-            $customer->city = $data['city'] ?? $customer->city;
+        $order = DB::transaction(function () use ($data, $product, $color, $size, $quantity, $phone) {
+            $customer = Customer::firstOrNew(['phone' => $phone]);
+            $customer->name = $data['nom'];
 
-            if (! empty($data['consent']) && ! $customer->consent) {
+            if (! $customer->consent) {
                 $customer->consent = true;
                 $customer->consented_at = now();
             }
@@ -55,14 +49,15 @@ class OrderController extends Controller
             $order = Order::create([
                 'customer_id' => $customer->id,
                 'status' => 'nouvelle',
+                'delivery_address' => $data['quartier'],
                 'total' => $product->price * $quantity,
                 'terms_accepted_at' => now(),
             ]);
 
             $order->items()->create([
                 'product_id' => $product->id,
-                'color_id' => $data['color_id'],
-                'size_id' => $data['size_id'],
+                'color_id' => $color->id,
+                'size_id' => $size->id,
                 'quantity' => $quantity,
                 'unit_price' => $product->price,
             ]);
@@ -86,22 +81,19 @@ class OrderController extends Controller
         $order = Order::with(['customer', 'items.product', 'items.color', 'items.size'])
             ->findOrFail($orderId);
 
-        return view('orders.confirmation', [
-            'order' => $order,
-            'whatsappUrl' => $this->whatsappUrl($order),
-        ]);
-    }
-
-    private function whatsappUrl(Order $order): string
-    {
         $item = $order->items->first();
 
-        $message = "Bonjour TOP ÉLÉGANCE, je souhaite précommander :\n"
-            ."{$item->quantity} × {$item->product->name} ({$item->color->name}, taille {$item->size->name})\n"
-            ."Commande n°{$order->id} — {$order->customer->name}, {$order->customer->phone}";
+        // Même format que celui attendu par la vue de confirmation.
+        $commande = [
+            'nom' => $order->customer->name,
+            'telephone' => $order->customer->phone,
+            'quartier' => $order->delivery_address,
+            'modele' => $item->product->name,
+            'couleur' => $item->color->name,
+            'taille' => $item->size->name,
+            'quantite' => $item->quantity,
+        ];
 
-        $number = preg_replace('/\D/', '', (string) config('shop.whatsapp_number'));
-
-        return 'https://wa.me/'.$number.'?text='.rawurlencode($message);
+        return view('orders.confirmation', ['commande' => $commande]);
     }
 }

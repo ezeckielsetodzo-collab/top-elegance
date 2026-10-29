@@ -32,13 +32,15 @@ class AdminTest extends TestCase
         $product = Product::with(['colors', 'sizes'])->where('preorder_open', true)->firstOrFail();
 
         $this->post(route('orders.store'), [
-            'name' => 'Kofi Mensah',
-            'phone' => '90123456',
-            'product_id' => $product->id,
-            'color_id' => $product->colors->first()->id,
-            'size_id' => $product->sizes->first()->id,
-            'quantity' => 1,
-            'terms' => 'on',
+            'nom' => 'Kofi Mensah',
+            'telephone' => '90123456',
+            'quartier' => 'Tokoin, Lomé',
+            'modele' => $product->slug,
+            'couleur' => $product->colors->first()->name,
+            'taille' => $product->sizes->first()->name,
+            'quantite' => 1,
+            'consentement' => '1',
+            'cgv' => '1',
         ]);
 
         return Order::firstOrFail();
@@ -100,6 +102,7 @@ class AdminTest extends TestCase
             ->assertOk()
             ->assertSee('Kofi Mensah')
             ->assertSee('90123456')
+            ->assertSee('Tokoin, Lomé')
             ->assertSee('10 000 FCFA')
             ->assertSee('Nouvelle');
 
