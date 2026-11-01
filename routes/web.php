@@ -46,6 +46,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/indicateurs/export', [\App\Http\Controllers\Admin\AdminExportController::class, 'indicators'])->name('exports.indicators');
         Route::get('/commandes/export', [\App\Http\Controllers\Admin\AdminExportController::class, 'orders'])->name('exports.orders');
         Route::get('/sondage', [\App\Http\Controllers\Admin\AdminPollController::class, 'index'])->name('polls.index');
+        Route::get('/clients', [\App\Http\Controllers\Admin\AdminCustomerController::class, 'index'])->name('customers.index');
         Route::patch('/commandes/{order}', [AdminOrderController::class, 'update'])->name('orders.update');
     });
 });

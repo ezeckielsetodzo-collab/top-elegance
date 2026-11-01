@@ -11,6 +11,9 @@ return [
     // Nombre de jours sans commande après lesquels un stock est dit « dormant ».
     'dormant_days' => (int) env('SHOP_DORMANT_DAYS', 30),
 
+    // Nombre d'achats (commandes payées ou livrées) pour devenir « client fidèle ».
+    'loyal_after' => (int) env('SHOP_LOYAL_AFTER', 3),
+
     // Compte administrateur créé par : php artisan db:seed --class=AdminSeeder
     'admin_email' => env('ADMIN_EMAIL'),
     'admin_password' => env('ADMIN_PASSWORD'),
