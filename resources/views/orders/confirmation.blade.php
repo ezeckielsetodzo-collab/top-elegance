@@ -21,7 +21,20 @@
         <div class="flex justify-between px-4 py-3"><dt class="text-sourdine">Quantité</dt><dd>{{ $commande['quantite'] }}</dd></div>
         <div class="flex justify-between px-4 py-3"><dt class="text-sourdine">Livraison</dt><dd>{{ $commande['quartier'] }}</dd></div>
     </dl>
-
+@if (!empty($commande['code_parrainage']))
+    <div class="mx-auto mt-8 max-w-sm rounded border border-or px-4 py-5"
+         x-data="{ ok: false, lien: @js(route('orders.create', ['parrain' => $commande['code_parrainage']])) }">
+        <p class="text-sm text-sourdine">Parrainez un ami avec votre code</p>
+        <p class="mt-1 font-serif text-3xl font-extrabold tracking-widest text-or">{{ $commande['code_parrainage'] }}</p>
+        <div class="mt-4 flex flex-wrap justify-center gap-4 text-sm">
+            <button type="button" class="text-sourdine hover:text-or"
+                    @click="navigator.clipboard.writeText(lien).then(() => { ok = true; setTimeout(() => ok = false, 2000) })"
+                    x-text="ok ? 'Lien copié' : 'Copier le lien de parrainage'">Copier le lien de parrainage</button>
+            <a class="text-sourdine hover:text-or" target="_blank" rel="noopener"
+               href="https://wa.me/?text={{ urlencode('Commande ton T-shirt TOP ÉLÉGANCE avec mon code '.$commande['code_parrainage'].' : '.route('orders.create', ['parrain' => $commande['code_parrainage']])) }}">Partager sur WhatsApp</a>
+        </div>
+    </div>
+@endif
     <div class="mt-8 flex flex-wrap justify-center gap-3">
         <x-button href="https://wa.me/{{ $numero }}?text={{ urlencode($message) }}" target="_blank" rel="noopener">Écrire sur WhatsApp</x-button>
         <x-button href="{{ route('products.index') }}" variant="secondary">Retour à la collection</x-button>

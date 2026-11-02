@@ -79,7 +79,20 @@
                 @error('quantite') <p class="mt-1 text-sm text-[#e5877e]">{{ $message }}</p> @enderror
             </div>
         </div>
-
+<div class="grid gap-6 sm:grid-cols-2">
+    <div>
+        <label for="code" class="text-sm">Code promo (facultatif)</label>
+        <input id="code" name="code" type="text" value="{{ old('code') }}" autocomplete="off" autocapitalize="characters"
+               placeholder="Ex. JEAN10" class="{{ $champ }}" @error('code') aria-invalid="true" @enderror>
+        @error('code') <p class="mt-1 text-sm text-[#e5877e]">{{ $message }}</p> @enderror
+    </div>
+    <div>
+        <label for="parrain" class="text-sm">Code de parrainage d’un ami (facultatif)</label>
+        <input id="parrain" name="parrain" type="text" value="{{ old('parrain', request('parrain')) }}" autocomplete="off" autocapitalize="characters"
+               class="{{ $champ }}" @error('parrain') aria-invalid="true" @enderror>
+        @error('parrain') <p class="mt-1 text-sm text-[#e5877e]">{{ $message }}</p> @enderror
+    </div>
+</div>
         {{-- Piège à robots : champ invisible, un humain ne le remplit jamais --}}
         <div class="hidden" aria-hidden="true">
             <label>Ne pas remplir <input type="text" name="site_web" tabindex="-1" autocomplete="off"></label>
