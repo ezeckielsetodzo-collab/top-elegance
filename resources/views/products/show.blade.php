@@ -86,6 +86,86 @@
                         @click="navigator.clipboard.writeText(window.location.href).then(() => { ok = true; setTimeout(() => ok = false, 2000) })"
                         x-text="ok ? 'Lien copié' : 'Copier le lien'">Copier le lien</button>
             </div>
+            <div class="mt-8 border-t border-ligne pt-6"
+     x-data="{
+        slug: @js($product['slug']),
+        resultats: {},
+        total: 0,
+        choix: '',
+        message: '',
+        erreur: false,
+        envoi: false,
+        get lignes() { return Object.keys(this.resultats).map(c => ({ c: c, n: this.resultats[c] })) },
+        pct(n) { return this.total ? Math.round(n * 100 / this.total) : 0 },
+        async charger() {
+            try {
+                const r = await fetch(@js(url('/sondage')) + '/' + this.slug, { headers: { 'Accept': 'application/json' } });
+                if (!r.ok) return;
+                const d = await r.json();
+                this.resultats = d.resultats || {};
+                this.total = d.total || 0;
+            } catch (e) {}
+        },
+        async voter() {
+            if (!this.choix || this.envoi) return;
+            this.envoi = true; this.message = ''; this.erreur = false;
+            try {
+                const r = await fetch(@js(url('/sondage')), {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content
+                    },
+                    body: JSON.stringify({ modele: this.slug, couleur: this.choix, site_web: '' })
+                });
+                const d = await r.json().catch(() => ({}));
+                if (d.resultats) { this.resultats = d.resultats; this.total = d.total ?? this.total; }
+                this.erreur = !r.ok;
+                this.message = d.message || (r.ok ? 'Merci pour votre vote !' : 'Le vote n’a pas pu être enregistré.');
+            } catch (e) {
+                this.erreur = true;
+                this.message = 'Connexion impossible. Réessayez dans un instant.';
+            }
+            this.envoi = false;
+        }
+     }"
+     x-init="charger()">
+
+    <p class="font-serif text-xl font-semibold">Votre couleur préférée</p>
+    <p class="mt-1 text-sm text-sourdine">Votez pour la couleur que vous aimeriez voir sur ce modèle.</p>
+
+    <div class="mt-4 flex flex-wrap gap-2" role="group" aria-label="Choisir une couleur pour voter">
+        <template x-for="l in lignes" :key="l.c">
+            <button type="button" @click="choix = l.c" :aria-pressed="choix === l.c"
+                    class="rounded-full border px-4 py-1.5 text-sm transition"
+                    :class="choix === l.c ? 'border-transparent bg-or text-noir' : 'border-ligne text-sourdine hover:text-ivoire'"
+                    x-text="l.c"></button>
+        </template>
+    </div>
+
+    <div class="mt-4">
+        <x-button type="button" x-on:click="voter()" x-bind:disabled="!choix || envoi">Voter</x-button>
+    </div>
+
+    <p class="mt-3 text-sm" x-show="message" x-cloak role="status"
+       :class="erreur ? 'text-[#e5877e]' : 'text-or'" x-text="message"></p>
+
+    <ul class="mt-5 space-y-3" aria-label="Résultats du sondage">
+        <template x-for="l in lignes" :key="l.c">
+            <li>
+                <div class="flex justify-between text-sm">
+                    <span x-text="l.c"></span>
+                    <span class="text-sourdine" x-text="pct(l.n) + ' % · ' + l.n + (l.n > 1 ? ' votes' : ' vote')"></span>
+                </div>
+                <div class="mt-1 h-2 rounded bg-noir-doux">
+                    <div class="h-2 rounded bg-or transition-all" :style="'width:' + pct(l.n) + '%'"></div>
+                </div>
+            </li>
+        </template>
+    </ul>
+    <p class="mt-2 text-sm text-sourdine" x-text="total + (total > 1 ? ' votes au total' : ' vote au total')"></p>
+</div>
         </div>
     </div>
 </div>
